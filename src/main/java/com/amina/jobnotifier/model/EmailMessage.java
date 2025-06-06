@@ -38,6 +38,7 @@ public class EmailMessage {
         this.from = from;
         this.subject = subject;
         this.content = content;
+        this.category = RejectionCategory.UNPROCESSED;
     }
 
     @Override
