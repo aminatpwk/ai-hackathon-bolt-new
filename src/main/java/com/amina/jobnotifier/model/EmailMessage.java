@@ -1,12 +1,22 @@
 package com.amina.jobnotifier.model;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
+
 /**
  * EmailMessage POJO class
  */
 public class EmailMessage {
-    private final String from;
-    private final String subject;
-    private final String content;
+    private String from;
+    private String subject;
+    private String content;
+    private LocalDateTime receivedDate;
+    private boolean read;
+
+    public EmailMessage(){
+        this.read = false;
+    }
 
     public EmailMessage(String from, String subject, String content){
         this.from = from;
@@ -17,5 +27,37 @@ public class EmailMessage {
     @Override
     public String toString() {
         return "EmailMessage [from=" + from + ", subject=" + subject + ", content=" + content + "]";
+    }
+
+    public String getFrom() {
+        return from;
+    }
+    public String getSubject() {
+        return subject;
+    }
+    public String getContent() {
+        return content;
+    }
+    public LocalDateTime getReceivedDate() {
+        return receivedDate;
+    }
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+    public void setContent(String content) {
+        this.content=content;
+    }
+    public void setReceivedDate(LocalDateTime receivedDate) {
+        this.receivedDate = receivedDate;
+    }
+    public void setRead(boolean read) {
+        this.read = read;
     }
 }
