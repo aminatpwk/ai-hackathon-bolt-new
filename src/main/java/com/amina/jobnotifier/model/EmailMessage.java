@@ -13,9 +13,25 @@ public class EmailMessage {
     private String content;
     private LocalDateTime receivedDate;
     private boolean read;
+    private RejectionCategory category;
+
+    public enum RejectionCategory{
+        REJECTION("Rejection"),
+        POTENTIAL_REJECTION("Potential Rejection"),
+        OTHER("Other"),
+        UNPROCESSED("Unprocessed");
+        private String displayName;
+        RejectionCategory(String displayName){
+            this.displayName = displayName;
+        }
+        public String getDisplayName(){
+            return displayName;
+        }
+    }
 
     public EmailMessage(){
         this.read = false;
+        this.category = RejectionCategory.UNPROCESSED;
     }
 
     public EmailMessage(String from, String subject, String content){
@@ -44,6 +60,9 @@ public class EmailMessage {
     public boolean isRead() {
         return read;
     }
+    public RejectionCategory getCategory() {
+        return category;
+    }
 
     public void setFrom(String from) {
         this.from = from;
@@ -59,5 +78,8 @@ public class EmailMessage {
     }
     public void setRead(boolean read) {
         this.read = read;
+    }
+    public void setCategory(RejectionCategory category) {
+        this.category = category;
     }
 }

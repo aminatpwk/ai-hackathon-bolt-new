@@ -3,6 +3,7 @@ package com.amina.jobnotifier.service;
 import com.amina.jobnotifier.model.EmailAccount;
 import com.amina.jobnotifier.model.EmailMessage;
 import com.amina.jobnotifier.util.EmailUtils;
+import com.amina.jobnotifier.util.NotificationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,7 @@ import java.util.Properties;
 
 public class EmailService {
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
-
+    private RejectionService rejectionService = new RejectionService();
     public void checkAccount(EmailAccount account){
         logger.info("Checking account: {}", account.getDisplayName());
 
@@ -57,11 +58,15 @@ public class EmailService {
                 String subject = msg.getSubject();
                 String from = msg.getFrom()[0].toString();
                 String content = EmailUtils.getTextFromMessage(msg);
-
                 EmailMessage emailMessage = new EmailMessage(from, subject, content);
                 emailMessages.add(emailMessage);
-
-                logger.info("Unread Email:\nFrom: {}\nSubject: {}\nContent: {}", from, subject, content);
+                EmailMessage processedEmail = rejectionService.detectRejection(emailMessage);
+//                logger.info("Unread Email:\nFrom: {}\nSubject: {}\nContent: {}", from, subject, content);
+                if(processedEmail.getCategory() == EmailMessage.RejectionCategory.REJECTION){
+                    NotificationUtil.getInstance().showRejectionNotification(processedEmail);
+                }else if(processedEmail.getCategory() == EmailMessage.RejectionCategory.OTHER){
+                    NotificationUtil.getInstance().showRejectionNotification(processedEmail);
+                }
 
             } catch (Exception e) {
                 logger.error("Failed to parse message: {}", e.getMessage(), e);
