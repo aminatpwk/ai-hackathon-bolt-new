@@ -14,6 +14,7 @@ public class EmailMessage {
     private LocalDateTime receivedDate;
     private boolean read;
     private RejectionCategory category;
+    private boolean jobRelated;
 
     public enum RejectionCategory{
         REJECTION("Rejection"),
@@ -64,6 +65,9 @@ public class EmailMessage {
     public RejectionCategory getCategory() {
         return category;
     }
+    public boolean getJobRelated() {
+        return jobRelated;
+    }
 
     public void setFrom(String from) {
         this.from = from;
@@ -82,5 +86,8 @@ public class EmailMessage {
     }
     public void setCategory(RejectionCategory category) {
         this.category = category;
+    }
+    public void setJobRelated(boolean jobRelated) {
+        this.jobRelated = jobRelated;
     }
 }

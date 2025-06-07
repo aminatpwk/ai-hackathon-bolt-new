@@ -1,6 +1,8 @@
 package com.amina.jobnotifier.service;
 
+import com.amina.jobnotifier.model.EmailAnalysisResult;
 import com.amina.jobnotifier.model.EmailMessage;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +16,25 @@ public class RejectionService {
     private List<String> rejectionKeywords;
     private List<String> hrDomains;
 
+    private OpenAIService openAIService;
+    private boolean useOpenAI;
+
     public RejectionService(){
+        String aiKey = Dotenv.configure().load().get("OPENAI_API_KEY");
+        if(aiKey != null && !aiKey.trim().isEmpty()){
+            this.openAIService = new OpenAIService(aiKey);
+            this.useOpenAI = true;
+            logger.info("OpenAI service created");
+        }else{
+            this.openAIService = null;
+            this.useOpenAI = false;
+            logger.warn("OpenAI API key not configured, switching to default pattern");
+        }
+
+        initializePatterns();
+    }
+
+    private void initializePatterns() {
         rejectionPatterns = new ArrayList<>();
         rejectionPatterns.add(Pattern.compile("(?i)we (regret|are sorry) to inform you"));
         rejectionPatterns.add(Pattern.compile("(?i)thank you for (your interest|applying).*?unfortunately"));
@@ -49,6 +69,32 @@ public class RejectionService {
     }
 
     public EmailMessage detectRejection(EmailMessage email){
+        if(useOpenAI){
+            return analyzeWithOpenAI(email);
+        }else{
+            return analyzeWithPatterns(email);
+        }
+    }
+
+    private EmailMessage analyzeWithOpenAI(EmailMessage email){
+        try{
+            EmailAnalysisResult result = openAIService.analyzeEmail(
+                    email.getSubject(),
+                    email.getContent(),
+                    email.getFrom()
+            );
+            if (result.isRejection()) {
+                email.setCategory(EmailMessage.RejectionCategory.REJECTION);
+            }
+            logger.debug("OpenAI analysis - Subject: '{}', Category: {}, Company:{}", email.getSubject(), email.getCategory(), email.getFrom());
+        }catch(Exception e){
+            logger.error("Error in OpenAI analysis, switching to default pattern");
+            return analyzeWithPatterns(email);
+        }
+        return email;
+    }
+
+    private EmailMessage analyzeWithPatterns(EmailMessage email){
         String content = email.getContent() != null ? email.getContent() : "";
         String subject = email.getSubject() != null ? email.getSubject() : "";
         String sender = email.getFrom() != null ? email.getFrom() : "";
@@ -68,7 +114,6 @@ public class RejectionService {
 
         return email;
     }
-
     private double checkRejectionPatterns(String content){
         int matchCount = 0;
         for(Pattern pattern : rejectionPatterns){
@@ -112,5 +157,11 @@ public class RejectionService {
         }
 
         return 0.1;
+    }
+
+    public void cleanup(){
+        if(openAIService != null){
+            openAIService.close();
+        }
     }
 }
