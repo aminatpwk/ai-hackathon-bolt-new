@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.* ?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.amina.jobnotifier.controller.MainController"
+            prefWidth="700" prefHeight="500">
+
+    <top>
+        <VBox>
+            <HBox style="-fx-background-color: linear-gradient(to bottom, rgba(12,101,12,0.19), rgba(12,101,12,0.42)); -fx-padding: 10;">
+                <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
+                    <Image url="@/images/icon.png"/>
+                </ImageView>
+                <Label text="Job Notifier" style="-fx-text-fill: rgba(12,101,12,0.76); -fx-font-size: 24px; -fx-font-weight: bold; -fx-padding: 5 0 0 10;"/>
+            </HBox>
+            <ToolBar style="-fx-background-color: rgba(12,101,12,0.19); -fx-padding: 5;">
+                <Button text="Start checking" onAction="#onStartClicked" style="-fx-text-fill: rgba(12,101,12,0.76); -fx-font-weight: bold;"/>
+                <Separator orientation="VERTICAL"/>
+                <Button text="Settings" style="-fx-text-fill: rgba(12,101,12,0.76);"/>
+                <Button text="Help" style="-fx-text-fill: rgba(12,101,12,0.76);"/>
+            </ToolBar>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox style="-fx-padding: 10;">
+            <Label text="Activity Log:" style="-fx-text-fill: rgba(12,101,12,0.76); -fx-font-weight: bold; -fx-padding: 0 0 5 0;"/>
+            <TextArea fx:id="logArea" editable="false" wrapText="true"
+                      style="-fx-text-fill: rgba(12,101,12,0.76); -fx-font-family: 'Consolas'; -fx-font-size: 14px;"/>
+        </VBox>
+    </center>
+    <bottom>
+        <HBox style="-fx-background-color: rgba(12,101,12,0.19); -fx-padding: 5; -fx-alignment: center;">
+            <Label text="© 2025 Amina" style="-fx-text-fill: rgba(12,101,12,0.76); -fx-font-style: italic;"/>
+        </HBox>
+    </bottom>
+</BorderPane>

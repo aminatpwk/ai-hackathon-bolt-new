@@ -1,6 +1,5 @@
 # Email AI Notifier
-
-This project is being developed as part of an AI Hackathon. The goal is to build a smart email monitoring system that can scan job-related emails, extract relevant information, and send custom notifications to the user based on preferences.
+This project is being developed as part of an AI Hackathon. The goal is to build a personal smart email monitoring system that can scan job-related emails, extract relevant information, and send custom notifications to the user based on preferences. 
 
 ---
 
@@ -33,9 +32,29 @@ users stay informed immediately.
    - Company
    - Category (REJECTION, OTHER)
 Only emails classified as REJECTION trigger a system notification.
+
+### Application GUI
+Application interface provided for visualizing the rejection emails and notifications.
   
 ---
 
+## Screenshots
+Application main page interface.
+ 1. Start Checking button: begins monitoring for job updates in the email configured
+2. Settings button: configure application preferences (to be added later)
+3. Help button: access documentation and support
+
+Activity log provides real-time updates. 
+
+![img.png](img.png)
+
+A System Tray Icon ensures the app runs discreetly in the background without interrupting the user
+experience. It serves for real-time alerts displaying instant desktop notifications for new rejection emails. 
+Right-clicking the tray icon provides a shortcut to open or exit the application.
+
+![img_1.png](img_1.png)
+
+---
 ## Tech Stack
 
 - Java 17+
@@ -56,4 +75,6 @@ com.amina.jobnotifier/
 ```
 
 ## A/N
-More features and AI integration coming soon!
+The app at the moment serves for personal uses only. More features will be implemented in the future.
+
+treat people with kindness :)

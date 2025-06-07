@@ -5,9 +5,12 @@ import java.awt.*;
 import com.amina.jobnotifier.model.EmailMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.TrayIcon.MessageType;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 public class NotificationUtil {
     private static Logger logger = LoggerFactory.getLogger(NotificationUtil.class);
@@ -15,7 +18,7 @@ public class NotificationUtil {
     private boolean systemTrayAvailable;
     private TrayIcon trayIcon;
 
-    private NotificationUtil() {
+    public NotificationUtil() {
         initSystemTray();
     }
 
@@ -26,7 +29,7 @@ public class NotificationUtil {
         return instance;
     }
 
-    private void initSystemTray() {
+    public void initSystemTray() {
         if(!SystemTray.isSupported()){
             systemTrayAvailable = false;
             logger.warn("System tray is not supported");
@@ -35,30 +38,17 @@ public class NotificationUtil {
 
         try{
             SystemTray tray = SystemTray.getSystemTray();
-            int trayIconSize = tray.getTrayIconSize().height;
-            Image image = createTrayIconImage(trayIconSize);
+            Image image = ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("images/tray_icon.png")));
             trayIcon = new TrayIcon(image, "Email Notifier AI");
             trayIcon.setImageAutoSize(true);
+            trayIcon.setToolTip("Listening for job rejections...");
             tray.add(trayIcon);
             systemTrayAvailable = true;
             logger.info("System tray is initialized");
-        }catch(AWTException e){
+        }catch(Exception e){
             systemTrayAvailable = false;
             logger.error("Error initializing system tray: {}", e.getMessage(), e);
         }
-    }
-
-    private Image createTrayIconImage(int size) {
-        BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = image.createGraphics();
-        g.setColor(new Color(16, 63, 101));
-        g.fillRect(0, 0, size, size);
-        g.setColor(Color.WHITE);
-
-        //ikona e app si @
-        g.drawString("@", size/3, (int)(size*0.7));
-        g.dispose();
-        return image;
     }
 
     public void showRejectionNotification(EmailMessage email){
@@ -66,9 +56,9 @@ public class NotificationUtil {
             logger.warn("Cannot show notification, system tray not available.");
             return;
         }
-        String title = "Job Application Rejection";
-        String message = "Rejection from: "+email.getFrom()+"\n"+"Subject: "+email.getSubject();
-        trayIcon.displayMessage(title, message, MessageType.INFO);
+        for(TrayIcon icon : SystemTray.getSystemTray().getTrayIcons()){
+            icon.displayMessage("New Email", String.valueOf(email), TrayIcon.MessageType.INFO);
+        }
         logger.info("Displayed rejection notification: {}", email.getSubject());
     }
 
