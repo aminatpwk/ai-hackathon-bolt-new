@@ -27,6 +27,13 @@ This project is being developed as part of an AI Hackathon. The goal is to build
 - Desktop notifications (via NotificationUtil) are triggered when a rejection is detected, helping
 users stay informed immediately.
 
+### Email Classification via OpenAI
+- Each incoming email is sent to the OpenAI API for natural language analysis. The model extracts key information such as:
+   - Subject
+   - Company
+   - Category (REJECTION, OTHER)
+Only emails classified as REJECTION trigger a system notification.
+  
 ---
 
 ## Tech Stack
